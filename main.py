@@ -1,13 +1,19 @@
-import threading,time,os,sys
+import threading,time,os,sys,platform
 from multiprocessing.pool import ThreadPool
 cac="\n"
 cacc="#"
+ccac="|"
 
+from cpuinfo import get_cpu_info
+
+#input
 def inp(txt):
     vp=sys.version_info
     if vp[0]==2: return raw_input(txt)
     else: return input(txt)
 
+
+#test1
 def test1(tm): #Le plus d'incrementations possibles en 10sec
     t1=time.time()
     x=0
@@ -15,6 +21,7 @@ def test1(tm): #Le plus d'incrementations possibles en 10sec
        x+=1
     return (time.time()-t1),x
 
+#test2
 def test2(tm): #Le plus de décrémentations possibles en 10sec
     t1=time.time()
     x=0
@@ -22,12 +29,14 @@ def test2(tm): #Le plus de décrémentations possibles en 10sec
        x-=1
     return (time.time()-t1),x
 
+#test3
 def test3(nb): #Le plus de carre possibles en 2sec
     t1=time.time()
     for x in range(1,nb+1):
         x=x**2
     return x,(time.time()-t1)
 
+#test4
 def test4(tm,nbt):
     ts=[]
     ars=[]
@@ -46,8 +55,12 @@ def test4(tm,nbt):
     return tt,score
 
 
-def main(): 
-    txt="" #la premiere partie du fichier contient les infos processeur
+#main
+def main():
+    vp=list(sys.version_info) #version de python
+    for x in range(len(vp)): vp[x]=str(vp[x]) #version de python
+    txt="Nom du processeur"+ccac+str( get_cpu_info()["brand"] )+cacc+"Architecture du cpu"+ccac+str( get_cpu_info()["arch"] )+cacc+"Nombre de coeurs"+ccac+str( get_cpu_info()["count"] )+cacc+"Frequence"+ccac+str( get_cpu_info()["hz_actual"] )+cacc+"Version de python utilisée"+ccac+".".join(vp)+cacc+"Platforme utilisée"+ccac+platform.system()         #la premiere partie du fichier contient les infos du benchmark
+    print(txt)
     res=[] #la liste des résultats
     #test1
     if inp("Voulez vous faire le premier test ?\n(Le plus d'incrementations possibles en 10sec)\n(yes,y,oui)\n : ").lower() in ["y","yes","oui"]:
