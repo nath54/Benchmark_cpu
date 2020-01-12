@@ -1,10 +1,17 @@
+#coding:utf-8
+
+#imports
 import threading,time,os,sys,platform
 from multiprocessing.pool import ThreadPool
+from psutil import virtual_memory
+from cpuinfo import get_cpu_info
+
+#variables de séparations de texte
 cac="\n"
 cacc="#"
 ccac="|"
 
-from cpuinfo import get_cpu_info
+
 
 #input
 def inp(txt):
@@ -57,9 +64,11 @@ def test4(tm,nbt):
 
 #main
 def main():
+    mem = virtual_memory()
+    ram = mem.total  # total physical memory available
     vp=list(sys.version_info) #version de python
     for x in range(len(vp)): vp[x]=str(vp[x]) #version de python
-    txt="Nom du processeur"+ccac+str( get_cpu_info()["brand"] )+cacc+"Architecture du cpu"+ccac+str( get_cpu_info()["arch"] )+cacc+"Nombre de coeurs"+ccac+str( get_cpu_info()["count"] )+cacc+"Frequence"+ccac+str( get_cpu_info()["hz_actual"] )+cacc+"Version de python utilisée"+ccac+".".join(vp)+cacc+"Platforme utilisée"+ccac+platform.system()         #la premiere partie du fichier contient les infos du benchmark
+    txt="Nom du processeur"+ccac+str( get_cpu_info()["brand"] )+cacc+"Architecture du cpu"+ccac+str( get_cpu_info()["arch"] )+cacc+"Nombre de coeurs"+ccac+str( get_cpu_info()["count"] )+cacc+"Frequence"+ccac+str( get_cpu_info()["hz_actual"] )+cacc+"Version de python utilisée"+ccac+".".join(vp)+cacc+"Platforme utilisée"+ccac+platform.system()+cacc+"Memoire RAM"+ccac+str(ram)         #la premiere partie du fichier contient les infos du benchmark
     print(txt)
     res=[] #la liste des résultats
     #test1
@@ -71,7 +80,7 @@ def main():
     if inp("Voulez vous faire le second test ?\n(Le plus de décrémentations possibles en 10sec)\n(yes,y,oui)\n : ").lower() in ["y","yes","oui"]:
         t2,x2=test2(10)
         print("Test n°2 (décrémentations) : En "+str(t2)+" sec , le processeur a eu un score de "+str(-x2))
-        res.append( ["Test2",t2,x2] )
+        res.append( ["Test2",t2,-x2] )
     #test3
     if inp("Voulez vous faire le troisième test ?\n(Le temps de calcul des 10**8 premiers carrés sur nombre entiers)\n(yes,y,oui)\n : ").lower() in ["y","yes","oui"]:
         n3,t3=test3(10**8)
